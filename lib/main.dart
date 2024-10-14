@@ -27,7 +27,7 @@ class InfluxDBHome extends StatefulWidget {
 }
 
 class _InfluxDBHomeState extends State<InfluxDBHome> {
-  final String _url = 'http://192.168.0.151:8086'; // Your InfluxDB server URL
+  final String _url = 'http://10.21.15.237:8086'; // Your InfluxDB server URL
   final String _token = 'QJ-3i22xhqMN1_dNAgJYdLKov_7IEJyxtgeNyYnAXcbuXnQLoD2yM_hAnNMnq77QNbfqXpsO6VX-ZzAQO6EYfg=='; // Your InfluxDB token
   final String _org = 'magangbrin'; // Your InfluxDB organization
   final String _bucket = 'MEVi_sensor_data'; // Your InfluxDB bucket
