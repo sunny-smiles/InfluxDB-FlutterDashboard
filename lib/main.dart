@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:influxdb_client/api.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() {
+  dotenv.load(); // Load environments
   runApp(MyApp());
 }
 
@@ -27,10 +29,10 @@ class InfluxDBHome extends StatefulWidget {
 }
 
 class _InfluxDBHomeState extends State<InfluxDBHome> {
-  final String _url = 'http://10.21.15.237:8086'; // Your InfluxDB server URL
-  final String _token = 'QJ-3i22xhqMN1_dNAgJYdLKov_7IEJyxtgeNyYnAXcbuXnQLoD2yM_hAnNMnq77QNbfqXpsO6VX-ZzAQO6EYfg=='; // Your InfluxDB token
-  final String _org = 'magangbrin'; // Your InfluxDB organization
-  final String _bucket = 'MEVi_sensor_data'; // Your InfluxDB bucket
+  final String _url = dotenv.env['_URL'] ?? ''; // Your InfluxDB server URL
+  final String _token = dotenv.env['_TOKEN'] ?? ''; // Your InfluxDB token
+  final String _org = dotenv.env['_ORG'] ?? ''; // Your InfluxDB organization
+  final String _bucket = dotenv.env['_BUCKET'] ?? ''; // Your InfluxDB bucket
 
   List<_ChartData> _headingData = []; // For heading data
   List<_ChartData> _latitudeData = []; // For latitude data

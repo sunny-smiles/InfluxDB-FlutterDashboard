@@ -27,13 +27,9 @@ This project uses the following tools and versions:
     - ROSBridge WebSocket: ROS Noetic 1.17.0
     - Python 3.8 (for ROS tools and scripts)
 
-2. Windows 10 Pro 22H2 x64:
+2. Windows 10 x64:
     - Flutter 3.24.3
-    - Flutter VS Code extension 3.98.0
     - Dart 3.5.3
-    - Android SDK 34.0.0
-    - Visual Studio Community 2022 17.11.4
-    - Android Studio 2024.1 with OpenJDK Runtime Environment build 17.0.11
 
 ## Installation
 1. **InfluxDB v2**
