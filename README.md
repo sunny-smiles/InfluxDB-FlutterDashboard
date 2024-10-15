@@ -71,6 +71,9 @@ This project uses the following tools and versions:
         roslaunch rosbridge_server rosbridge_websocket.launch
         ```
 
+5. **MAKE SURE YOU CAN ACCESS VM INFLUXDB ON WINDOWS BROWSER** (If you do both (ROS-InfluxDB and Flutter) in the same OS, you can skip this)
+    - If you having trouble, try to add Bridged Adapter in your VM, so theres 2 Network: NAT and Bridged Adapter
+
 ## Usage
 - After Installation done in both host OS and VM OS, subscribe to ros topic from sensors.
 
