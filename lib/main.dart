@@ -128,7 +128,10 @@ class _InfluxDBHomeState extends State<InfluxDBHome> {
       DateTime utcTimestamp = DateTime.parse(record['_time']);
       DateTime localTimestamp = utcTimestamp.toLocal();
       double longitudeValue = record['_value'].toDouble();
-      setState(() {        
+
+      print('Fetched value: $longitudeValue at UTC: $utcTimestamp, Local: $localTimestamp');
+      
+      setState(() {       
         _longitudeData.add(_ChartData(localTimestamp, longitudeValue));
         // Keep only the last 10 data points
         if (_longitudeData.length > 10) {
@@ -149,8 +152,13 @@ class _InfluxDBHomeState extends State<InfluxDBHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // Set the background color to black
       appBar: AppBar(
-        title: Text('InfluxDB Data Visualizer'),
+        title: Text(
+          'InfluxDB Data Visualizer', 
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.grey[900], // Darker app bar
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -160,52 +168,77 @@ class _InfluxDBHomeState extends State<InfluxDBHome> {
             Container(
               height: 300,
               child: SfCartesianChart(
-                title: ChartTitle(text: 'Heading Data Over Time'),
+                title: ChartTitle(text: 'Heading Data Over Time', textStyle: TextStyle(color: Colors.white)),
                 primaryXAxis: DateTimeAxis(
-                  dateFormat: DateFormat('yyyy-MM-dd HH:mm:ss'), // Format as HH:mm
+                  dateFormat: DateFormat('yyyy-MM-dd HH:mm:ss.SSS'),
+                  labelStyle: TextStyle(color: Colors.white), // Set axis label color to white
                 ),
-                primaryYAxis: NumericAxis(),
+                primaryYAxis: NumericAxis(
+                  labelStyle: TextStyle(color: Colors.white), // Set y-axis label color to white
+                ),
                 tooltipBehavior: TooltipBehavior(
-                  enable: true, // Enable tooltip
+                  enable: false,
                   header: '',
                   format: 'point.x\nValue: point.y',
-                  canShowMarker: true, // Format of the tooltip
+                  canShowMarker: true,
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                trackballBehavior: TrackballBehavior(
+                  enable: true,
+                  tooltipSettings: InteractiveTooltip(
+                    enable: true,
+                    color: Colors.red,
+                  )
                 ),
                 series: <CartesianSeries>[
                   LineSeries<_ChartData, DateTime>(
                     dataSource: _headingData,
                     xValueMapper: (_ChartData data, _) => data.timestamp,
                     yValueMapper: (_ChartData data, _) => data.value,
-                    markerSettings: MarkerSettings(isVisible: true),
-                    dataLabelSettings: DataLabelSettings(isVisible: true),
+                    markerSettings: MarkerSettings(isVisible: false),
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                      textStyle: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.blue, // Customize line color
+                    
                   ),
                 ],
               ),
             ),
+            
             SizedBox(height: 20),
 
             // Latitude Data Chart
             Container(
               height: 300,
               child: SfCartesianChart(
-                title: ChartTitle(text: 'Latitude Data Over Time'),
+                title: ChartTitle(text: 'Latitude Data Over Time', textStyle: TextStyle(color: Colors.white)),
                 primaryXAxis: DateTimeAxis(
                   dateFormat: DateFormat('yyyy-MM-dd HH:mm:ss'),
-                ),  // X-axis as DateTime
-                primaryYAxis: NumericAxis(),
+                  labelStyle: TextStyle(color: Colors.white), // Set axis label color to white
+                ),
+                primaryYAxis: NumericAxis(
+                  labelStyle: TextStyle(color: Colors.white), // Set y-axis label color to white
+                ),
                 tooltipBehavior: TooltipBehavior(
-                  enable: true, // Enable tooltip
+                  enable: true,
                   header: '',
                   format: 'point.x\nValue: point.y',
                   canShowMarker: true,
+                  textStyle: TextStyle(color: Colors.white),
                 ),
                 series: <CartesianSeries>[
                   LineSeries<_ChartData, DateTime>(
-                    dataSource: _latitudeData, // Data for heading chart
-                    xValueMapper: (_ChartData data, _) => data.timestamp,  // X-axis: timestamp
-                    yValueMapper: (_ChartData data, _) => data.value,  // Y-axis: heading value
-                    markerSettings: MarkerSettings(isVisible: true),  // Optional markers at each data point
-                    dataLabelSettings: DataLabelSettings(isVisible: true),  // Show labels at data points
+                    dataSource: _latitudeData,
+                    xValueMapper: (_ChartData data, _) => data.timestamp,
+                    yValueMapper: (_ChartData data, _) => data.value,
+                    markerSettings: MarkerSettings(isVisible: true),
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                      textStyle: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.green, // Customize line color
                   ),
                 ],
               ),
@@ -216,24 +249,80 @@ class _InfluxDBHomeState extends State<InfluxDBHome> {
             Container(
               height: 300,
               child: SfCartesianChart(
-                title: ChartTitle(text: 'Longitude Data Over Time'),
+                title: ChartTitle(text: 'Longitude Data Over Time', textStyle: TextStyle(color: Colors.white)),
                 primaryXAxis: DateTimeAxis(
                   dateFormat: DateFormat('yyyy-MM-dd HH:mm:ss'),
-                ),  // X-axis as DateTime
-                primaryYAxis: NumericAxis(),
+                  labelStyle: TextStyle(color: Colors.white), // Set axis label color to white
+                ),
+                primaryYAxis: NumericAxis(
+                  labelStyle: TextStyle(color: Colors.white), // Set y-axis label color to white
+                ),
                 tooltipBehavior: TooltipBehavior(
-                  enable: true, // Enable tooltip
+                  enable: true,
                   header: '',
                   format: 'point.x\nValue: point.y',
                   canShowMarker: true,
+                  textStyle: TextStyle(color: Colors.white),
                 ),
                 series: <CartesianSeries>[
                   LineSeries<_ChartData, DateTime>(
-                    dataSource: _longitudeData, // Data for heading chart
-                    xValueMapper: (_ChartData data, _) => data.timestamp,  // X-axis: timestamp
-                    yValueMapper: (_ChartData data, _) => data.value,  // Y-axis: heading value
-                    markerSettings: MarkerSettings(isVisible: true),  // Optional markers at each data point
-                    dataLabelSettings: DataLabelSettings(isVisible: true),  // Show labels at data points
+                    dataSource: _longitudeData,
+                    xValueMapper: (_ChartData data, _) => data.timestamp,
+                    yValueMapper: (_ChartData data, _) => data.value,
+                    markerSettings: MarkerSettings(isVisible: true),
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                      textStyle: TextStyle(color: Colors.white)
+                    ),
+                    color: Colors.red, // Customize line color
+                  ),
+                ],
+              ),
+            ),
+            // Latitude and Longitude Combined Chart
+            Container(
+              height: 300,
+              child: SfCartesianChart(
+                title: ChartTitle(
+                  text: 'Latitude and Longitude Data Over Time',
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                primaryXAxis: DateTimeAxis(
+                  dateFormat: DateFormat('yyyy-MM-dd HH:mm:ss'),
+                  labelStyle: TextStyle(color: Colors.white), // Set axis label color to white
+                ),
+                primaryYAxis: NumericAxis(
+                  labelStyle: TextStyle(color: Colors.white), // Set y-axis label color to white
+                ),
+                tooltipBehavior: TooltipBehavior(
+                  enable: true,
+                  header: '',
+                  format: 'point.x\nValue: point.y',
+                  canShowMarker: true,
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                series: <CartesianSeries>[
+                  LineSeries<_ChartData, DateTime>(
+                    dataSource: _latitudeData,
+                    xValueMapper: (_ChartData data, _) => data.timestamp,
+                    yValueMapper: (_ChartData data, _) => data.value,
+                    markerSettings: MarkerSettings(isVisible: true),
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                      textStyle: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.green, // Customize line color for latitude
+                  ),
+                  LineSeries<_ChartData, DateTime>(
+                    dataSource: _longitudeData,
+                    xValueMapper: (_ChartData data, _) => data.timestamp,
+                    yValueMapper: (_ChartData data, _) => data.value,
+                    markerSettings: MarkerSettings(isVisible: true),
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                      textStyle: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.red, // Customize line color for longitude
                   ),
                 ],
               ),

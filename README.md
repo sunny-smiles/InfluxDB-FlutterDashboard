@@ -6,7 +6,6 @@ Retrieve data from **Linux InfluxDB** to **Windows Flutter** Dashboard App using
 - [Prequisites](#prequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Features
