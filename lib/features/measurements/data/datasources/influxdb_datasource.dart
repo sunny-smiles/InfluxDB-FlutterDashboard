@@ -1,6 +1,7 @@
 import 'package:influxdb_client/api.dart';
 import 'package:influxdbtesting/core/constants/env_constants.dart';
 import '../../domain/enums/measurement_type.dart';
+import 'package:http/http.dart' as http;
 
 class InfluxDBDataSource {
   Future<List<FluxRecord>> fetchMeasurements(MeasurementType type) async {
@@ -39,6 +40,44 @@ class InfluxDBDataSource {
       |> filter(fn: (r) => r["measurement_type"] == "${queryParams['measurementType']}")     
       |> yield(name: "last")
     ''';
+  }
+
+  Future<List<int>> exportData(MeasurementType type, String timeRange) async {
+  // Get the query parameters dynamically based on the selected measurement type
+    final queryParams = _getQueryParameters(type);
+
+    // Build the Flux query dynamically using the selected measurement type
+    final String fluxQuery = '''
+      from(bucket: "${EnvConstants.bucket}")
+        |> range(start: ${_formatTimeRange(timeRange)})
+        |> filter(fn: (r) => r["_measurement"] == "${queryParams['measurement']}")
+        |> filter(fn: (r) => r["sensor_id"] == "${queryParams['sensorId']}")
+        |> filter(fn: (r) => r["sensor_type"] == "${queryParams['sensorType']}")
+        |> filter(fn: (r) => r["measurement_type"] == "${queryParams['measurementType']}")
+        |> filter(fn: (r) => r["_field"] == "${queryParams['field']}")
+        |> yield(name: "last")
+    ''';
+
+    // Send the request to InfluxDB
+    final uri = Uri.parse('${EnvConstants.url}/api/v2/query?org=${EnvConstants.org}');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Token ${EnvConstants.token}',
+        'Content-Type': 'application/vnd.flux',
+        'Accept': 'text/csv',
+      },
+      body: fluxQuery,
+    );
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes; // Return raw bytes of the CSV data
+    } else {
+      throw Exception(
+        'Failed to fetch data. Status: ${response.statusCode}, Response: ${response.body}',
+      );
+    }
   }
 
   Map<String, String> _getQueryParameters(MeasurementType type) {
@@ -125,6 +164,23 @@ class InfluxDBDataSource {
         };
       default:
         throw UnimplementedError('Measurement type not implemented');
+    }
+  }
+
+  String _formatTimeRange(String timeRange) {
+    switch (timeRange) {
+      case '1m':
+        return '-1m';
+      case '5m':
+        return '-5m';
+      case '1h':
+        return '-1h';
+      case '12h':
+        return '-12h';
+      case '1d':
+        return '-1d';
+      default:
+        return '-1m'; // Default to 1 minute
     }
   }
 }

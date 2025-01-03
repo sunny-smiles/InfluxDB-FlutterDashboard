@@ -1,8 +1,8 @@
-// lib/features/measurements/presentation/widgets/navigation_drawer.dart
 import 'package:flutter/material.dart';
 import '../../domain/enums/measurement_type.dart';
 import '../pages/home_page.dart';
 import '../pages/measurement_page.dart';
+import '../pages/export_page.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({super.key});
@@ -120,6 +120,23 @@ class NavigationDrawer extends StatelessWidget {
               title: 'ACS758',
               measurementType: MeasurementType.acs758,
             ),
+            ListTile(
+              leading: Icon(
+                Icons.file_download,
+                color: Colors.teal[600],
+              ),
+              title: Text(
+                'Export Data',
+                style: const TextStyle(color: Colors.white),
+              ),
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ExportPage()),
+                );
+              }
+            )
           ],
         ),
       ),
