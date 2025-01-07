@@ -57,8 +57,6 @@ class MeasurementChart extends StatelessWidget {
           ),
           primaryYAxis: NumericAxis(
             labelStyle: const TextStyle(color: Colors.white),
-            minimum: 0,
-            interval: measurementType == MeasurementType.heading ? 50 : 10,
           ),
           series: <CartesianSeries>[
             LineSeries<dynamic, DateTime>(
