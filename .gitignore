@@ -44,7 +44,3 @@ app.*.map.json
 
 # Environment Variables
 .env
-
-# file
-*.py
-*.xlsx
